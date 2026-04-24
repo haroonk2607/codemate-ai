@@ -43,7 +43,7 @@ streamlit run app.py
 
 ## Demo Screenshot
 
-![CodeMate AI Demo](assets/codemate-demo.png)
+![CodeMate AI Demo](assets/codemate-demo.png.png)
 
 ## Note
 
