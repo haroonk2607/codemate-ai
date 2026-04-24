@@ -31,3 +31,7 @@ GEMINI_API_KEY = "paste_your_gemini_api_key_here"
 
 run the app:
 streamlit run app.py
+
+## Demo Screenshot
+
+![CodeMate AI Demo](assets/codemate-demo.png)
