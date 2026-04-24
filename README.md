@@ -21,17 +21,30 @@ CodeMate AI is an AI-powered coding assistant built with Streamlit and Google Ge
 
 ## Setup
 
+## Setup
+
 Install dependencies:
 
 ```bash
 pip install -r requirements.txt
+```
 
-Create a config.py file:
+Create a `config.py` file:
+
+```python
 GEMINI_API_KEY = "paste_your_gemini_api_key_here"
+```
 
-run the app:
+Run the app:
+
+```bash
 streamlit run app.py
+```
 
 ## Demo Screenshot
 
 ![CodeMate AI Demo](assets/codemate-demo.png)
+
+## Note
+
+Do not upload your real `config.py` file because it contains your private API key.
