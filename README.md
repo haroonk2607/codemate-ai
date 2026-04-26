@@ -2,6 +2,10 @@
 
 CodeMate AI is an AI-powered coding assistant built with Streamlit and Google Gemini API.
 
+# CodeMate AI
+
+Live Demo: https://codemate-ai-bck9w7mgvsic3prybpr55n.streamlit.app/
+
 ## Features
 
 - Explain Python code
@@ -49,6 +53,3 @@ streamlit run app.py
 
 Do not upload your real `config.py` file because it contains your private API key.
 
-# CodeMate AI
-
-Live Demo: https://codemate-ai-bck9w7mgvsic3prybpr55n.streamlit.app/
