@@ -22,22 +22,25 @@ def extract_code_blocks(text):
     return "\n\n".join(code_blocks).strip()
 
 
-def add_to_history(task, language, user_input, ai_response):
+def add_to_history(task, language, user_input, ai_response, extracted_code=""):
     if "history" not in st.session_state:
         st.session_state.history = []
 
     st.session_state.history.insert(
         0,
         {
-            "time": datetime.now().strftime("%I:%M %p"),
+            "time": datetime.now().strftime("%d %b, %I:%M %p"),
             "task": task,
             "language": language,
-            "input": user_input[:250],
-            "response": ai_response[:500],
+            "input": user_input,
+            "response": ai_response,
+            "code": extracted_code,
         },
     )
 
-    st.session_state.history = st.session_state.history[:5]
+    # Keep latest 10 outputs in sidebar history
+    st.session_state.history = st.session_state.history[:10]
+
 
 
 if "history" not in st.session_state:
@@ -45,6 +48,24 @@ if "history" not in st.session_state:
 
 if "dark_mode" not in st.session_state:
     st.session_state.dark_mode = False
+
+if "last_result" not in st.session_state:
+    st.session_state.last_result = ""
+
+if "last_code" not in st.session_state:
+    st.session_state.last_code = ""
+
+if "last_task" not in st.session_state:
+    st.session_state.last_task = ""
+
+if "last_language" not in st.session_state:
+    st.session_state.last_language = ""
+
+if "last_input" not in st.session_state:
+    st.session_state.last_input = ""
+
+if "last_time" not in st.session_state:
+    st.session_state.last_time = ""
 
 
 # ---------------- SIDEBAR ----------------
@@ -89,13 +110,20 @@ with st.sidebar:
     if len(st.session_state.history) == 0:
         st.caption("No history yet.")
     else:
-        for item in st.session_state.history:
+        for idx, item in enumerate(st.session_state.history):
             with st.expander(f"{item['task']} - {item['time']}"):
                 st.caption(f"Language: {item['language']}")
-                st.write("**Input:**")
-                st.write(item["input"])
-                st.write("**Response preview:**")
-                st.write(item["response"])
+                st.write("**Input preview:**")
+                st.write(item["input"][:350])
+
+                if st.button("Show this output", key=f"show_history_{idx}"):
+                    st.session_state.last_result = item["response"]
+                    st.session_state.last_code = item.get("code", "")
+                    st.session_state.last_task = item["task"]
+                    st.session_state.last_language = item["language"]
+                    st.session_state.last_input = item["input"]
+                    st.session_state.last_time = item["time"]
+                    st.rerun()
 
 
 # ---------------- THEME COLORS ----------------
@@ -490,35 +518,54 @@ if generate_clicked:
                 else:
                     result = fix_error(user_input, language)
 
-            add_to_history(task, language, user_input, result)
-
-            st.markdown("## AI Response")
-            st.markdown(result)
-
-            st.markdown("---")
-
             extracted_code = extract_code_blocks(result)
 
-            if extracted_code:
-                st.markdown("## Copy-ready Code")
-                st.code(extracted_code, language="python")
+            # Save latest output so it does not disappear after theme/language/sidebar changes
+            st.session_state.last_result = result
+            st.session_state.last_code = extracted_code
+            st.session_state.last_task = task
+            st.session_state.last_language = language
+            st.session_state.last_input = user_input
+            st.session_state.last_time = datetime.now().strftime("%d %b, %I:%M %p")
 
-                st.download_button(
-                    label="Download Code",
-                    data=extracted_code,
-                    file_name="codemate_solution.py",
-                    mime="text/x-python"
-                )
-            else:
-                st.info("No separate code block found in the AI response.")
-
-            st.download_button(
-                label="Download Full AI Response",
-                data=result,
-                file_name="codemate_response.txt",
-                mime="text/plain"
-            )
+            add_to_history(task, language, user_input, result, extracted_code)
 
         except Exception as e:
             st.error("Something went wrong while getting AI response.")
             st.code(str(e))
+
+
+# ---------------- SAVED OUTPUT SECTION ----------------
+# This section is outside the button click block, so output stays visible
+# even when user changes theme, language, sidebar, or uploads another file.
+if st.session_state.last_result:
+    st.markdown("## AI Response")
+    st.caption(
+        f"Showing saved output: {st.session_state.last_task} | "
+        f"{st.session_state.last_language} | {st.session_state.last_time}"
+    )
+    st.markdown(st.session_state.last_result)
+
+    st.markdown("---")
+
+    if st.session_state.last_code:
+        st.markdown("## Copy-ready Code")
+        st.code(st.session_state.last_code, language="python")
+
+        st.download_button(
+            label="Download Code",
+            data=st.session_state.last_code,
+            file_name="codemate_solution.py",
+            mime="text/x-python",
+            key="download_saved_code"
+        )
+    else:
+        st.info("No separate code block found in the AI response.")
+
+    st.download_button(
+        label="Download Full AI Response",
+        data=st.session_state.last_result,
+        file_name="codemate_response.txt",
+        mime="text/plain",
+        key="download_saved_response"
+    )
