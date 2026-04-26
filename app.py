@@ -242,7 +242,13 @@ st.markdown(
         color: {text} !important;
     }}
 
-    p, label, span {{
+    p, label {{
+        color: {text} !important;
+    }}
+
+    .stMarkdown p,
+    .stMarkdown li,
+    .stMarkdown div {{
         color: {text} !important;
     }}
 
@@ -329,6 +335,16 @@ st.markdown(
         color: {bg} !important;
     }}
 
+    div.stButton > button p,
+    div.stButton > button span {{
+        color: white !important;
+    }}
+
+    div.stDownloadButton > button p,
+    div.stDownloadButton > button span {{
+        color: {bg} !important;
+    }}
+
     div[data-testid="stAlert"] {{
         border-radius: 16px;
         border: none;
@@ -338,14 +354,36 @@ st.markdown(
         background-color: {accent};
     }}
 
+    /* Code blocks - fixed for both light and dark mode */
     pre {{
         background: #111111 !important;
         border-radius: 16px !important;
         padding: 18px !important;
+        border: 1px solid #2b2b2b !important;
     }}
 
     code {{
         color: #f8f8f2 !important;
+        background: transparent !important;
+    }}
+
+    div[data-testid="stCodeBlock"] {{
+        background: #111111 !important;
+        border-radius: 16px !important;
+        border: 1px solid #2b2b2b !important;
+    }}
+
+    div[data-testid="stCodeBlock"] pre,
+    div[data-testid="stCodeBlock"] code,
+    div[data-testid="stCodeBlock"] span {{
+        color: #f8f8f2 !important;
+        background: transparent !important;
+    }}
+
+    div[data-testid="stCodeBlock"] button {{
+        color: #ffffff !important;
+        background: #2b2b2b !important;
+        border-radius: 8px !important;
     }}
 
     .streamlit-expanderHeader {{
