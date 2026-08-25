@@ -1,0 +1,29 @@
+{
+  "base_url_template": "https://YOUR_QBANKLY_DOMAIN/questions/{question_id}",
+  "start_id": 30000,
+  "end_id": 140000,
+  "set_size": 10000,
+  "export_size": 20000,
+  "output_dir": "exports/qbankly",
+  "headers": {
+    "User-Agent": "Mozilla/5.0",
+    "Accept": "text/html"
+  },
+  "cookies": {
+    "sessionid": "YOUR_SESSION_COOKIE"
+  },
+  "timeout_seconds": 30,
+  "min_delay_seconds": 0.1,
+  "max_delay_seconds": 0.4,
+  "max_retries": 8,
+  "retry_backoff_seconds": 30,
+  "css_selectors": {
+    "question_text": ".question-text",
+    "option_a": ".option-a",
+    "option_b": ".option-b",
+    "option_c": ".option-c",
+    "option_d": ".option-d",
+    "explanation": ".explanation"
+  },
+  "include_html": false
+}
